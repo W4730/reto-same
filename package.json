@@ -1,0 +1,10 @@
+{
+  "name": "reto-same",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "test": "npm test -w packages/shared",
+    "web": "npm run dev -w apps/web",
+    "campo": "npm start -w apps/campo"
+  }
+}
