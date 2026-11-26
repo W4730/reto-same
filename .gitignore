@@ -6,3 +6,9 @@ dist/
 .env.local
 *.log
 .vercel
+
+.vercel
+.env*
+# Expo lo genera si se ejecuta en la raíz; rompe el build de la web en Vercel
+/tsconfig.json
+/expo-env.d.ts
