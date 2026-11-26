@@ -37,7 +37,7 @@ export default function Home() {
               <Siren size={22} aria-hidden /> Vi una tortuga
             </Link>
             <Link to="/mapa" className="btn ghost big">
-              <MapPin size={22} aria-hidden /> Zonas de anidación
+              <MapPin size={22} aria-hidden /> Mapa de nidos
             </Link>
           </div>
         </div>

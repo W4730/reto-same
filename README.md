@@ -50,7 +50,7 @@ npm run build -w apps/web
 
 ## Base de datos (Supabase)
 
-Aplicar en orden `supabase/migrations/0001_init.sql` y `0002_sectors.sql` (SQL Editor del panel, o `supabase db push`).
+Aplicar en orden los archivos de `supabase/migrations/` (0001 → 0004) (SQL Editor del panel, o `supabase db push`).
 
 **Primer coordinador:** crear la cuenta desde la app y luego, en el SQL Editor:
 
@@ -70,7 +70,7 @@ SUPABASE_URL=https://xxxx.supabase.co SUPABASE_SERVICE_ROLE_KEY=... node scripts
 
 - Código corto por temporada (`S26-0142`), sector y ventana de eclosión: trigger al insertar.
 - Un nido validado no puede moverse: el trigger rechaza el cambio, incluso al coordinador.
-- El público nunca lee `nests`. Ve `public_sectors()` (conteos) y `public_nests()` (solo eclosionados o perdidos).
+- El público nunca lee la tabla `nests` (fotos, notas y quién registró son privados). Ve `public_sectors()` (conteos) y `public_nests()`: coordenadas exactas de todos los nidos validados, para el mapa de calor. Para volver a ocultar los activos, ver `supabase/migrations/0003_public_precision.sql`.
 - `por_eclosionar` se calcula al leer (`hatch_from <= ahora`), sin tareas programadas.
 
 ## Pendiente de confirmar con Reto Same

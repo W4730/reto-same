@@ -35,7 +35,7 @@ Handout.md con cifras públicas que **no cuadran** entre páginas (§9): no most
 1. Pocos toques y nada que el voluntario pueda equivocar: lo que el teléfono sabe, lo llena solo.
 2. Sin señal es el caso normal, no la excepción. El voluntario siempre sabe qué falta por enviar.
 3. Un dato validado no se mueve.
-4. La ubicación exacta de nidos activos nunca sale del equipo.
+4. El mapa es abierto: la fundación quiere ver dónde se concentran los nidos (objetivo de su investigación). Decidido el 25 nov 2026.
 
 ## Accessibility & Inclusion
 Estados distinguibles por forma y color (daltonismo, sol fuerte). Objetivos táctiles grandes. Texto funcional nunca bajo peso 400.

@@ -17,3 +17,15 @@ export type PublicSector = {
   hatching_soon: number;
   hatched_this_season: number;
 };
+
+export type PublicNest = {
+  id: string;
+  lat: number;
+  lng: number;
+  sector_id: string | null;
+  species: string | null;
+  status: import('@retosame/shared').NestStatus;
+  laid_at: string;
+  hatched_at: string | null;
+  season: string;
+};

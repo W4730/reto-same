@@ -20,7 +20,7 @@ Web pública de la Fundación Reto Same, conectada a los mismos datos que la app
 Teléfono en la playa, a veces sin señal (el protocolo SOS se guarda offline la primera vez), de noche o bajo sol fuerte. Llegan desde un QR.
 
 ## Capabilities and Constraints
-Mapa de sectores con conteo de nidos activos (nunca coordenadas de nidos activos). Protocolo SOS en pasos cortos, llamada/WhatsApp +593 98 428 1540, reporte de avistamiento (foto + ubicación), buenas prácticas, página QR. Sin abrumar con datos técnicos.
+Mapa abierto: puntos exactos de los nidos validados y mapa de calor de concentración (decisión de la fundación, 25 nov 2026), más conteo por sector. Protocolo SOS en pasos cortos, llamada/WhatsApp +593 98 428 1540, reporte de avistamiento (foto + ubicación), buenas prácticas, página QR. Sin abrumar con datos técnicos.
 
 ## Brand Commitments
 Ver apps/campo/PRODUCT.md y handout.md §2–7, §10.
@@ -31,7 +31,7 @@ Cifras del sitio actual no cuadran (handout §9): no publicarlas sin validar. Si
 ## Product Principles
 1. Qué hacer primero, por qué después.
 2. Funciona sin señal.
-3. Proteger nidos activos por encima de mostrar datos.
+3. Datos abiertos y legibles: la concentración de nidos es el dato central.
 
 ## Accessibility & Inclusion
 WCAG AA: turquesa claro nunca con texto. Legible bajo sol.

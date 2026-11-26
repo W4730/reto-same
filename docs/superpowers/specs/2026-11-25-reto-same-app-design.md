@@ -34,5 +34,8 @@ Push al coordinador, App Check, modo nocturno, mapa offline en campo, estadísti
 ## Offline (campo)
 Al guardar, el registro va a una cola en AsyncStorage y la foto comprimida (≈1600 px, JPEG 0.75) a `expo-file-system`. Cuando NetInfo detecta conexión o el usuario pulsa "Enviar": se sube la foto a `nests/{id}.jpg` con upsert, luego `upsert` de la fila y se borra de la cola. El indicador muestra el tamaño de la cola.
 
+## Cambio posterior (25 nov 2026)
+La fundación indicó que ocultar coordenadas es poco relevante y que necesitan precisión para estudiar la concentración de nidos. `public_nests()` devuelve todos los nidos validados con coordenadas exactas; la web muestra mapa de calor y puntos. Logo vectorial en `brand/` (sello manuscrito, página 1 del .ai).
+
 ## Decisiones del builder
 Sectores provisionales dibujados a mano en Same; tiles web de OpenFreeMap (gratis, sin clave); el turista no inicia sesión.

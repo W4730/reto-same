@@ -527,3 +527,5 @@ public_nests/{nestId}                  // PÚBLICA: solo nidos eclosionados o pe
 7. Todo lo P2: estadísticas, fichas de especies, mapa offline en campo, modo nocturno.
 
 Con Firebase CLI y el conector en VS Code, este documento sirve como especificación para generar `firestore.rules`, `storage.rules`, índices y Functions. Conviene pedirle a Claude Code que empiece por las reglas y las pruebe con el Emulator Suite antes de desplegar.
+
+> **Actualización 25 nov 2026:** la fundación decidió el mapa abierto (§13.3). La web pública muestra la ubicación exacta de los nidos validados y un mapa de calor de concentración.

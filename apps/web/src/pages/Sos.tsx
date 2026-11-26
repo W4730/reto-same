@@ -1,5 +1,5 @@
 import { SOS_PHONE, SOS_PHONE_LABEL, WHATSAPP_URL } from '@retosame/shared';
-import { Ban, Camera, Flashlight, Hand, MessageCircle, Phone, Ruler, Timer } from 'lucide-react';
+import { Camera, Flashlight, Hand, MessageCircle, Phone, Ruler, Timer } from 'lucide-react';
 import { Link } from '../lib/nav';
 
 const steps = [
@@ -43,10 +43,6 @@ export default function Sos() {
 
       <section className="soft">
         <div className="wrap stack">
-          <div className="note warn">
-            <Ban size={20} aria-hidden />
-            <p>No publiques la ubicación exacta de una tortuga o un nido en redes. Así protegemos los nidos del saqueo.</p>
-          </div>
           <div className="note">
             <Camera size={20} aria-hidden />
             <p>
