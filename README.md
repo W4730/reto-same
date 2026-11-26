@@ -53,13 +53,15 @@ npm run build -w apps/web
 
 Aplicar en orden los archivos de `supabase/migrations/` (0001 → 0004) (SQL Editor del panel, o `supabase db push`).
 
-**Primer coordinador:** crear la cuenta desde la app y luego, en el SQL Editor:
+**Coordinadores:** al crear cuenta en la app, elegir "Coordinador" e ingresar el **código de coordinador** que reparten los coordinadores actuales. La base de datos valida el código (solo guarda su hash bcrypt en el esquema privado `private.settings`, que la API no expone); con un código incorrecto el registro se rechaza. Para cambiar el código, en el SQL Editor:
 
 ```sql
-update public.profiles set role = 'coordinador' where id = (select id from auth.users where email = 'correo@del.coordinador');
+insert into private.settings (key, value)
+values ('coordinator_code', extensions.crypt('NUEVO-CODIGO', extensions.gen_salt('bf')))
+on conflict (key) do update set value = excluded.value;
 ```
 
-Después el coordinador asigna roles desde la app (ícono de equipo).
+Un coordinador también puede promover voluntarios desde la app (botón **Equipo**). Los reportes de turistas llegan al botón **Reportes**.
 
 **Importar Google Earth:** exportar el mapa como KML y correr
 

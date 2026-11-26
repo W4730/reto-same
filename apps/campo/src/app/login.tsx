@@ -3,7 +3,7 @@ import { Redirect } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Banner, Button, Field, s } from '../components/ui';
+import { Banner, Button, Chip, Field, s } from '../components/ui';
 import { useAuth } from '../lib/auth';
 import { configured, supabase } from '../lib/supabase';
 import { c, type } from '../lib/theme';
@@ -16,6 +16,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [role, setRole] = useState<'voluntario' | 'coordinador'>('voluntario');
+  const [code, setCode] = useState('');
 
   if (session) return <Redirect href="/" />;
 
@@ -26,9 +28,13 @@ export default function Login() {
     const { error, data } =
       mode === 'in'
         ? await supabase.auth.signInWithPassword(creds)
-        : await supabase.auth.signUp({ ...creds, options: { data: { name: name.trim() } } });
+        : await supabase.auth.signUp({
+            ...creds,
+            // El código lo valida la base de datos (trigger), nunca la app.
+            options: { data: { name: name.trim(), ...(role === 'coordinador' ? { admin_code: code.trim().toUpperCase() } : {}) } },
+          });
     setBusy(false);
-    if (error) setMsg(error.message.includes('Invalid login') ? 'Correo o contraseña incorrectos.' : error.message);
+    if (error) setMsg(authError(error.message, role === 'coordinador'));
     else if (mode === 'up' && !data.session) setMsg('Revisa tu correo para confirmar la cuenta y luego entra.');
   }
 
@@ -54,6 +60,20 @@ export default function Login() {
                 <TextInput style={s.input} value={name} onChangeText={setName} placeholder="Ej. Tabata" placeholderTextColor={c.textDim} autoComplete="name" />
               </Field>
             )}
+            {mode === 'up' && (
+              <Field label="Me registro como">
+                <View style={{ flexDirection: 'row', gap: 8 }}>
+                  <Chip label="Voluntario" selected={role === 'voluntario'} onPress={() => setRole('voluntario')} />
+                  <Chip label="Coordinador" selected={role === 'coordinador'} onPress={() => setRole('coordinador')} />
+                </View>
+              </Field>
+            )}
+            {mode === 'up' && role === 'coordinador' && (
+              <Field label="Código de coordinador">
+                <TextInput style={s.input} value={code} onChangeText={setCode} secureTextEntry autoCapitalize="characters" autoCorrect={false}
+                  placeholder="Te lo da un coordinador de Reto Same" placeholderTextColor={c.textDim} />
+              </Field>
+            )}
             <Field label="Correo">
               <TextInput style={s.input} value={email} onChangeText={setEmail} placeholder="tu@correo.com" placeholderTextColor={c.textDim}
                 keyboardType="email-address" autoCapitalize="none" autoComplete="email" />
@@ -64,12 +84,24 @@ export default function Login() {
             </Field>
             {msg && <Text style={[type.bodyDim, { color: c.amber }]} accessibilityLiveRegion="polite">{msg}</Text>}
             <Button big label={mode === 'in' ? 'Entrar' : 'Crear cuenta'} onPress={submit} loading={busy}
-              disabled={!configured || !email || password.length < 6 || (mode === 'up' && !name.trim())} />
-            <Button variant="text" label={mode === 'in' ? '¿Eres nuevo? Crea tu cuenta de voluntario' : 'Ya tengo cuenta'}
+              disabled={!configured || !email || password.length < 6 || (mode === 'up' && (!name.trim() || (role === 'coordinador' && !code.trim())))} />
+            <Button variant="text" label={mode === 'in' ? '¿Eres nuevo? Crea tu cuenta' : 'Ya tengo cuenta'}
               onPress={() => { setMode(mode === 'in' ? 'up' : 'in'); setMsg(null); }} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
+}
+
+/** Mensajes de Supabase Auth en español. */
+function authError(m: string, asCoordinator: boolean) {
+  if (m.includes('Invalid login')) return 'Correo o contraseña incorrectos.';
+  if (m.includes('Email not confirmed')) return 'Confirma tu correo antes de entrar.';
+  if (m.includes('already registered')) return 'Ese correo ya tiene cuenta. Toca “Ya tengo cuenta”.';
+  if (/is invalid/i.test(m)) return 'Ese correo no es válido.';
+  if (/rate limit|security purposes/i.test(m)) return 'Demasiados intentos. Espera unos minutos.';
+  // El trigger rechaza el registro completo cuando el código no coincide.
+  if (asCoordinator && /database error/i.test(m)) return 'El código de coordinador no es correcto.';
+  return m;
 }
