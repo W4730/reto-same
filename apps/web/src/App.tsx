@@ -30,7 +30,7 @@ export default function App() {
       <header className="topbar">
         <div className="wrap">
           <Link to="/" className="brandmark">
-            <img src="/logo.png" alt="" width={40} height={40} />
+            <img src="/tortuga.png" alt="" width={36} height={36} />
             Reto Same
           </Link>
           <nav className="topnav" aria-label="Principal">

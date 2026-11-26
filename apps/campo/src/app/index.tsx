@@ -25,14 +25,21 @@ export default function Home() {
 
   useFocusEffect(useCallback(() => { mine.reload(); if (isCoordinator) inbox.reload(); }, [isCoordinator, mine.reload, inbox.reload]));
   // Al terminar un envío, refrescar la lista para que aparezcan los códigos asignados.
-  useEffect(() => { if (!sync.flushing) mine.reload(); }, [sync.flushing]);
+  useEffect(() => {
+    if (sync.flushing) return;
+    mine.reload();
+    if (isCoordinator) inbox.reload();
+  }, [sync.flushing]);
   useEffect(() => {
     if (!saved) return;
     setToast(sync.online ? 'Nido guardado. Enviando…' : 'Nido guardado en el teléfono. Se enviará cuando haya señal.');
-    const t = setTimeout(() => setToast(null), 4000);
     router.setParams({ saved: undefined });
-    return () => clearTimeout(t);
   }, [saved]);
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   if (loading) return null;
   if (!session) return <Redirect href="/login" />;
@@ -43,7 +50,7 @@ export default function Home() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['top']}>
       <View style={st.bar}>
-        <Image source={require('../../assets/logo.png')} style={{ width: 40, height: 40 }} accessibilityLabel="Reto Same" />
+        <Image source={require('../../assets/tortuga.png')} style={{ width: 40, height: 40, borderRadius: 20 }} accessibilityLabel="Reto Same" />
         <View style={{ flex: 1 }}>
           <Text style={type.headline}>Reto Same</Text>
           <Text style={type.bodyDim} numberOfLines={1}>Hola{name ? `, ${name}` : ''}</Text>

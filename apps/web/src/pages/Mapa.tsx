@@ -1,9 +1,13 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as maplibregl from 'maplibre-gl';
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import { STATUS_META, type NestStatus } from '@retosame/shared';
 import { Flame, MapPin, WifiOff } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { configured, supabase, type PublicNest, type PublicSector } from '../lib/supabase';
+
+// maplibre v6 carga su worker como archivo aparte: Vite lo emite con ?url.
+maplibregl.setWorkerUrl(workerUrl);
 
 const SAME: [number, number] = [-79.929, 0.842];
 type View = 'calor' | 'nidos';
@@ -138,7 +142,7 @@ export default function Mapa() {
         </h1>
         <p className="lead">
           {nests.length
-            ? `${nests.length} nidos registrados, ${active} activos ahora. Camina por la orilla húmeda donde la concentración es alta.`
+            ? `${nests.length === 1 ? "1 nido registrado" : `${nests.length} nidos registrados`}, ${active === 1 ? "1 activo" : `${active} activos`} ahora. Camina por la orilla húmeda donde la concentración es alta.`
             : offline
               ? 'Sin datos todavía.'
               : 'Todavía no hay nidos validados esta temporada.'}

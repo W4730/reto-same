@@ -21,6 +21,7 @@ const WAIT_S = 20;
 
 export default function Registrar() {
   const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [gpsTry, setGpsTry] = useState(0);
   const [fix, setFix] = useState<Fix | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
   const id = useRef(randomUUID()).current;
@@ -28,7 +29,7 @@ export default function Registrar() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: c.bg }} edges={['bottom']}>
       <Stepper step={step} />
-      {step === 0 && <StepGps onDone={(f) => { setFix(f); setStep(1); }} />}
+      {step === 0 && <StepGps key={gpsTry} onRetry={() => setGpsTry((n) => n + 1)} onDone={(f) => { setFix(f); setStep(1); }} />}
       {step === 1 && <StepPhoto id={id} onDone={(uri) => { setPhoto(uri); setStep(2); }} onBack={() => setStep(0)} />}
       {step === 2 && fix && photo && <StepConfirm id={id} fix={fix} photo={photo} onRetakePhoto={() => setStep(1)} />}
     </SafeAreaView>
@@ -50,7 +51,7 @@ function Stepper({ step }: { step: number }) {
 }
 
 // ── Paso 1: GPS con precisión visible ─────────────────────────────────────────
-function StepGps({ onDone }: { onDone: (f: Fix) => void }) {
+function StepGps({ onDone, onRetry }: { onDone: (f: Fix) => void; onRetry: () => void }) {
   const [perm, setPerm] = useState<'ask' | 'ok' | 'denied'>('ask');
   const [fix, setFix] = useState<Fix | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -78,7 +79,8 @@ function StepGps({ onDone }: { onDone: (f: Fix) => void }) {
         <Icon name="map-marker-off-outline" size={56} color={c.amber} />
         <Text style={[type.title, { textAlign: 'center' }]}>Necesitamos tu ubicación</Text>
         <Text style={[type.bodyDim, { textAlign: 'center' }]}>Sin GPS no se puede marcar dónde está el nido. Actívalo en los ajustes del teléfono.</Text>
-        <Button label="Abrir ajustes" icon="cog-outline" onPress={() => Linking.openSettings()} />
+        <Button label="Intentar de nuevo" icon="refresh" onPress={onRetry} />
+        <Button variant="text" label="Abrir ajustes" icon="cog-outline" onPress={() => Linking.openSettings()} />
       </Center>
     );
   }

@@ -11,7 +11,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       // Todo el bundle (incluye protocolo SOS y buenas prácticas) queda en caché la primera visita.
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,mjs,css,html,png,svg,woff2}'],
         navigateFallback: '/index.html',
         runtimeCaching: [
           {
