@@ -6,8 +6,10 @@ import { AppState } from 'react-native';
 import { enqueue, flush, pending, type NestDraft, type QueueDeps } from './queue';
 import { configured, supabase } from './supabase';
 
-/** Fotos esperando subir. Viven en documentos (no en caché) para sobrevivir al cierre de la app. */
-export const photoDir = new Directory(Paths.document, 'pendientes');
+/** Fotos esperando subir. Viven en documentos (no en caché) para sobrevivir al cierre de la app.
+ *  Se construye al usarse: crear un Directory al importar el módulo rompe toda la app donde
+ *  expo-file-system no existe (web: "this.validatePath is not a function"). */
+export const photoDir = () => new Directory(Paths.document, 'pendientes');
 
 const deps: QueueDeps = {
   storage: AsyncStorage,

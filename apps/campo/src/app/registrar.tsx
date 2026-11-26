@@ -160,8 +160,9 @@ function StepPhoto({ id, onDone, onBack }: { id: string; onDone: (uri: string) =
       // ≈1600 px, JPEG 75 %: liviana para subir con mala señal.
       const ref = await ImageManipulator.manipulate(shot).resize({ width: 1600, height: null }).renderAsync();
       const out = await ref.saveAsync({ format: SaveFormat.JPEG, compress: 0.75 });
-      if (!photoDir.exists) photoDir.create({ intermediates: true, idempotent: true });
-      const dest = new File(photoDir, `${id}.jpg`);
+      const dir = photoDir();
+      if (!dir.exists) dir.create({ intermediates: true, idempotent: true });
+      const dest = new File(dir, `${id}.jpg`);
       if (dest.exists) dest.delete();
       await new File(out.uri).copy(dest);
       onDone(dest.uri);

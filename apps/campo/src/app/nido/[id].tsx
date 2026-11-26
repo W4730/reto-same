@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { NestMap } from '../../components/NestMap';
 import { Banner, Button, Icon, StatusMarker } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
 import { sectorName } from '../../lib/nests';
@@ -79,11 +79,7 @@ export default function NestDetail() {
       </View>
 
       <View style={st.mapWrap}>
-        <MapView style={{ flex: 1 }} mapType="satellite" initialRegion={{ latitude: n.lat, longitude: n.lng, latitudeDelta: 0.002, longitudeDelta: 0.002 }}
-          onPress={(e) => moving && setMoving({ lat: e.nativeEvent.coordinate.latitude, lng: e.nativeEvent.coordinate.longitude })}>
-          <Marker coordinate={{ latitude: pos.lat, longitude: pos.lng }} pinColor={meta.color} draggable={!!moving}
-            onDragEnd={(e) => setMoving({ lat: e.nativeEvent.coordinate.latitude, lng: e.nativeEvent.coordinate.longitude })} />
-        </MapView>
+        <NestMap center={{ lat: n.lat, lng: n.lng }} pos={pos} color={meta.color} editable={!!moving} onMove={setMoving} />
         {n.location_locked && (
           <View style={st.lock}><Icon name="lock" size={16} color={c.text} /><Text style={type.label}>Ubicación bloqueada</Text></View>
         )}

@@ -5,10 +5,12 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { Linking, Platform, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from '../lib/auth';
 import { SyncProvider } from '../lib/sync';
-import { c, font } from '../lib/theme';
+import { Button } from '../components/ui';
+import { c, font, type } from '../lib/theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,6 +20,8 @@ export default function Root() {
     if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
   if (!loaded) return null;
+  // La app de campo usa cámara, GPS y archivos locales: solo existe en el teléfono.
+  if (Platform.OS === 'web') return <WebNotice />;
 
   return (
     <SafeAreaProvider>
@@ -44,5 +48,21 @@ export default function Root() {
         </SyncProvider>
       </AuthProvider>
     </SafeAreaProvider>
+  );
+}
+
+function WebNotice() {
+  return (
+    <View style={{ flex: 1, backgroundColor: c.bg, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 16 }}>
+      <Text style={[type.headline, { textAlign: 'center' }]}>App de campo</Text>
+      <Text style={[type.body, { textAlign: 'center', maxWidth: 420 }]}>
+        El registro de nidos usa la cámara, el GPS y guarda fotos sin señal, así que funciona en el teléfono con Expo Go
+        (o la app instalada), no en el navegador.
+      </Text>
+      <Text style={[type.bodyDim, { textAlign: 'center', maxWidth: 420 }]}>
+        La web pública para turistas está en apps/web (npm run web).
+      </Text>
+      <Button label="Abrir la web pública local" icon="open-in-new" onPress={() => Linking.openURL('http://localhost:5173')} />
+    </View>
   );
 }
