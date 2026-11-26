@@ -35,9 +35,10 @@ Solo la clave **publishable/anon**. La `service_role` nunca va en las apps.
 ### App de campo (Expo Go)
 
 ```bash
-cd apps/campo
-npx expo start          # escanear el QR con Expo Go, o tecla "a" para el emulador Android
+npm start               # desde la raíz (equivale a: cd apps/campo && npx expo start)
 ```
+
+Escanear el QR con Expo Go, o tecla `a` para el emulador Android. **No correr `npx expo start` en la raíz del repo**: falla con `Unable to resolve "../../App"` porque la app vive en `apps/campo`.
 
 ### Web pública
 

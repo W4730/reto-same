@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "start": "npm start -w apps/campo",
     "test": "npm test -w packages/shared && npm test -w apps/campo && node --test scripts/*.test.mjs",
     "web": "npm run dev -w apps/web",
     "campo": "npm start -w apps/campo"
