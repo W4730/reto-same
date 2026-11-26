@@ -36,8 +36,16 @@ async function remove(storage: KV, id: string) {
   await storage.setItem(KEY, JSON.stringify((await pending(storage)).filter((d) => d.id !== id)));
 }
 
-/** Envía en orden; lo que falla queda en la cola. Foto primero (upsert por id), luego la fila. */
-export async function flush(deps: QueueDeps) {
+let running: Promise<{ sent: number; failed: number }> | null = null;
+
+/** Envía en orden; lo que falla queda en la cola. Foto primero (upsert por id), luego la fila.
+ *  Si ya hay un envío en curso (guardar + volver la señal a la vez), se reutiliza en vez de duplicar. */
+export function flush(deps: QueueDeps) {
+  running ??= flushOnce(deps).finally(() => (running = null));
+  return running;
+}
+
+async function flushOnce(deps: QueueDeps) {
   let sent = 0, failed = 0;
   for (const d of await pending(deps.storage)) {
     try {

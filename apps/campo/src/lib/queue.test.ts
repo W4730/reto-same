@@ -40,6 +40,21 @@ test('flush keeps failures and retries with the same id', async () => {
   assert.equal((await pending(storage)).length, 0);
 });
 
+test('concurrent flush calls send each nest once', async () => {
+  const storage = memStorage();
+  await enqueue(storage, draft('a'));
+  let inserts = 0;
+  const deps: QueueDeps = {
+    storage,
+    uploadPhoto: async (id) => { await new Promise((r) => setTimeout(r, 20)); return `${id}.jpg`; },
+    insertNest: async () => { inserts++; },
+    deleteLocal: async () => {},
+  };
+  // Guardar dispara un envío y la red vuelve al mismo tiempo: dos llamadas casi simultáneas.
+  await Promise.all([flush(deps), flush(deps)]);
+  assert.equal(inserts, 1);
+});
+
 test('insert row carries photo path and no local uri', async () => {
   const storage = memStorage();
   await enqueue(storage, draft('c'));

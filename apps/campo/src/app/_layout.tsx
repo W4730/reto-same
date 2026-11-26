@@ -39,6 +39,7 @@ export default function Root() {
             <Stack.Screen name="registrar" options={{ title: 'NUEVO NIDO', presentation: 'fullScreenModal' }} />
             <Stack.Screen name="nido/[id]" options={{ title: '' }} />
             <Stack.Screen name="equipo" options={{ title: 'EQUIPO' }} />
+            <Stack.Screen name="reportes" options={{ title: 'REPORTES' }} />
           </Stack>
         </SyncProvider>
       </AuthProvider>

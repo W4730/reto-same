@@ -22,8 +22,14 @@ export default function Home() {
   const inbox = useNests('pending', session?.user.id);
   const { saved } = useLocalSearchParams<{ saved?: string }>();
   const [toast, setToast] = useState<string | null>(null);
+  const [openReports, setOpenReports] = useState(0);
+  const loadReports = useCallback(async () => {
+    if (!isCoordinator) return;
+    const { count } = await supabase.from('sightings').select('id', { count: 'exact', head: true }).is('handled_at', null);
+    setOpenReports(count ?? 0);
+  }, [isCoordinator]);
 
-  useFocusEffect(useCallback(() => { mine.reload(); if (isCoordinator) inbox.reload(); }, [isCoordinator, mine.reload, inbox.reload]));
+  useFocusEffect(useCallback(() => { mine.reload(); if (isCoordinator) { inbox.reload(); loadReports(); } }, [isCoordinator, mine.reload, inbox.reload, loadReports]));
   // Al terminar un envío, refrescar la lista para que aparezcan los códigos asignados.
   useEffect(() => {
     if (sync.flushing) return;
@@ -55,11 +61,6 @@ export default function Home() {
           <Text style={type.headline}>Reto Same</Text>
           <Text style={type.bodyDim} numberOfLines={1}>Hola{name ? `, ${name}` : ''}</Text>
         </View>
-        {isCoordinator && (
-          <Pressable accessibilityLabel="Equipo" hitSlop={8} style={st.iconBtn} onPress={() => router.push('/equipo')}>
-            <Icon name="account-group-outline" size={24} color={c.text} />
-          </Pressable>
-        )}
         <Pressable accessibilityLabel="Cerrar sesión" hitSlop={8} style={st.iconBtn} onPress={() => supabase.auth.signOut()}>
           <Icon name="logout" size={22} color={c.textDim} />
         </Pressable>
@@ -77,6 +78,13 @@ export default function Home() {
                 </Text>
               </Pressable>
             ))}
+          </View>
+        )}
+        {isCoordinator && (
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <Button variant="tonal" icon={openReports ? 'bell-ring-outline' : 'bell-outline'}
+              label={`Reportes${openReports ? ` · ${openReports}` : ''}`} onPress={() => router.push('/reportes')} style={{ flex: 1 }} />
+            <Button variant="tonal" icon="account-group-outline" label="Equipo" onPress={() => router.push('/equipo')} style={{ flex: 1 }} />
           </View>
         )}
       </View>

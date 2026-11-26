@@ -50,9 +50,12 @@ export function SyncProvider({ children }: { children: ReactNode }) {
 
   const flushNow = useCallback(async () => {
     if (busy.current || !configured) return;
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) return;
     busy.current = true;
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      busy.current = false;
+      return;
+    }
     setFlushing(true);
     try {
       const r = await flush(deps);

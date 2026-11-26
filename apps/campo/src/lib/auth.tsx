@@ -25,9 +25,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const uid = session?.user.id;
   useEffect(() => {
+    setProfile({ role: 'voluntario', name: '' }); // nunca heredar el rol de la cuenta anterior
     if (!uid) return;
-    // Perfil en caché: el rol se conoce aunque no haya señal.
-    AsyncStorage.getItem(PROFILE_KEY).then((raw) => raw && setProfile(JSON.parse(raw)));
+    const key = `${PROFILE_KEY}.${uid}`;
+    let fresh = false;
+    // Perfil en caché por usuario: el rol se conoce sin señal, pero nunca pisa al que llega del servidor.
+    AsyncStorage.getItem(key).then((raw) => raw && !fresh && setProfile(JSON.parse(raw)));
     supabase
       .from('profiles')
       .select('role,name')
@@ -35,8 +38,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .single()
       .then(({ data }) => {
         if (!data) return;
+        fresh = true;
         setProfile(data as { role: Role; name: string });
-        AsyncStorage.setItem(PROFILE_KEY, JSON.stringify(data));
+        AsyncStorage.setItem(key, JSON.stringify(data));
       });
   }, [uid]);
 
