@@ -44,6 +44,8 @@ export default function Root() {
             <Stack.Screen name="nido/[id]" options={{ title: '' }} />
             <Stack.Screen name="equipo" options={{ title: 'EQUIPO' }} />
             <Stack.Screen name="reportes" options={{ title: 'REPORTES' }} />
+            <Stack.Screen name="mapa" options={{ title: 'MAPA DE NIDOS' }} />
+            <Stack.Screen name="practicas" options={{ title: 'BUENAS PRÁCTICAS' }} />
           </Stack>
         </SyncProvider>
       </AuthProvider>

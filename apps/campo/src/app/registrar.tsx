@@ -7,9 +7,10 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Chip, Field, Icon, s } from '../components/ui';
+import { useKeyboardCenter } from '../lib/keyboard';
 import { photoDir, useSync } from '../lib/sync';
 import { c, font, radius, type } from '../lib/theme';
 
@@ -209,6 +210,7 @@ function StepPhoto({ id, onDone, onBack }: { id: string; onDone: (uri: string) =
 // ── Paso 3: confirmar (campos opcionales) ─────────────────────────────────────
 function StepConfirm({ id, fix, photo, onRetakePhoto }: { id: string; fix: Fix; photo: string; onRetakePhoto: () => void }) {
   const { add } = useSync();
+  const kb = useKeyboardCenter();
   const [species, setSpecies] = useState<Species | null>(null);
   const [track, setTrack] = useState('');
   const [notes, setNotes] = useState('');
@@ -227,8 +229,7 @@ function StepConfirm({ id, fix, photo, onRetakePhoto }: { id: string; fix: Fix; 
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="height">
-      <ScrollView contentContainerStyle={{ padding: 20, gap: 22 }} keyboardShouldPersistTaps="handled">
+    <ScrollView {...kb.scroll} contentContainerStyle={{ padding: 20, gap: 22, paddingBottom: 20 + kb.pad }}>
         <View style={st.summary}>
           <Image source={{ uri: photo }} style={st.thumb} accessibilityLabel="Foto del nido" />
           <View style={{ flex: 1, gap: 6 }}>
@@ -250,19 +251,18 @@ function StepConfirm({ id, fix, photo, onRetakePhoto }: { id: string; fix: Fix; 
         </Field>
 
         <Field label="Ancho de la huella (cm)">
-          <TextInput style={[s.input, trackBad && { borderColor: c.amber }]} value={track} onChangeText={setTrack}
+          <TextInput {...kb.field()} style={[s.input, trackBad && { borderColor: c.amber }]} value={track} onChangeText={setTrack}
             keyboardType="decimal-pad" placeholder="Ej. 72" placeholderTextColor={c.textDim} maxLength={5} />
           {trackBad && <Text style={[type.bodyDim, { color: c.amber }]}>Debe estar entre 10 y 250 cm. Si no lo mediste, déjalo vacío.</Text>}
         </Field>
 
         <Field label="Notas">
-          <TextInput style={[s.input, { minHeight: 88, paddingTop: 14, textAlignVertical: 'top' }]} value={notes} onChangeText={setNotes}
+          <TextInput {...kb.field()} style={[s.input, { minHeight: 88, paddingTop: 14, textAlignVertical: 'top' }]} value={notes} onChangeText={setNotes}
             multiline maxLength={1000} placeholder="Ej. frente al hotel, cerca de la desembocadura" placeholderTextColor={c.textDim} />
         </Field>
 
         <Button big icon="content-save-outline" label="Guardar nido" onPress={save} loading={saving} disabled={trackBad} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 

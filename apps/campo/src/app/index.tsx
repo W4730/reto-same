@@ -80,13 +80,17 @@ export default function Home() {
             ))}
           </View>
         )}
-        {isCoordinator && (
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Button variant="tonal" icon={openReports ? 'bell-ring-outline' : 'bell-outline'}
-              label={`Reportes${openReports ? ` · ${openReports}` : ''}`} onPress={() => router.push('/reportes')} style={{ flex: 1 }} />
-            <Button variant="tonal" icon="account-group-outline" label="Equipo" onPress={() => router.push('/equipo')} style={{ flex: 1 }} />
-          </View>
-        )}
+        <View style={st.grid}>
+          {isCoordinator && (
+            <>
+              <Button variant="tonal" icon="map-outline" label="Mapa" onPress={() => router.push('/mapa')} style={st.cell} />
+              <Button variant="tonal" icon={openReports ? 'bell-ring-outline' : 'bell-outline'}
+                label={`Reportes${openReports ? ` · ${openReports}` : ''}`} onPress={() => router.push('/reportes')} style={st.cell} />
+              <Button variant="tonal" icon="account-group-outline" label="Equipo" onPress={() => router.push('/equipo')} style={st.cell} />
+            </>
+          )}
+          <Button variant="tonal" icon="book-open-variant" label="Buenas prácticas" onPress={() => router.push('/practicas')} style={st.cell} />
+        </View>
       </View>
 
       <FlatList<NestDraft | Nest>
@@ -178,6 +182,8 @@ function Empty({ pendingTab }: { pendingTab: boolean }) {
 }
 
 const st = StyleSheet.create({
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  cell: { flexGrow: 1, flexBasis: '45%', paddingHorizontal: 12 },
   bar: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
   iconBtn: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center', borderRadius: 24 },
   segment: { flexDirection: 'row', backgroundColor: c.surface, borderRadius: radius.pill, padding: 4 },

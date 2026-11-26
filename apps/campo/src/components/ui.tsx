@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { STATUS_META, type NestStatus } from '@retosame/shared';
-import type { ComponentProps, ReactNode } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { useState, type ComponentProps, type ReactNode } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps, type ViewStyle } from 'react-native';
 import { c, font, radius, type } from '../lib/theme';
 
 export type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
@@ -108,7 +108,23 @@ export function Field({ label, children }: { label: string; children: ReactNode 
   );
 }
 
+/** Campo de contraseña con botón para mostrarla mientras se escribe. */
+export function PasswordInput(props: TextInputProps) {
+  const [show, setShow] = useState(false);
+  return (
+    <View style={{ justifyContent: 'center' }}>
+      <TextInput placeholderTextColor={c.textDim} autoCapitalize="none" autoCorrect={false} {...props}
+        secureTextEntry={!show} style={[s.input, { paddingRight: 56 }, props.style]} />
+      <Pressable onPress={() => setShow((v) => !v)} hitSlop={6} style={s.eye}
+        accessibilityRole="button" accessibilityLabel={show ? 'Ocultar contraseña' : 'Mostrar contraseña'}>
+        <Icon name={show ? 'eye-off-outline' : 'eye-outline'} size={22} color={c.textDim} />
+      </Pressable>
+    </View>
+  );
+}
+
 export const s = StyleSheet.create({
+  eye: { position: 'absolute', right: 2, width: 48, height: 48, alignItems: 'center', justifyContent: 'center' },
   btn: {
     minHeight: 48,
     paddingHorizontal: 20,

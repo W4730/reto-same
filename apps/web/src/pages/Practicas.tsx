@@ -1,14 +1,8 @@
-import { Car, Dog, Flame, Lightbulb, Tent, Trash2, Volume2 } from 'lucide-react';
+import { BEACH_RULES, type BeachRuleId } from '@retosame/shared';
+import { Car, Dog, Flame, Lightbulb, Tent, Trash2, Volume2, type LucideIcon } from 'lucide-react';
 
-const rules = [
-  { icon: Dog, title: 'Perros con correa', text: 'Los perros escarban nidos y persiguen neonatos. En la playa, siempre con correa.' },
-  { icon: Flame, title: 'Sin fogatas en la arena', text: 'El calor y la luz del fuego dañan los nidos y desorientan a las tortugas.' },
-  { icon: Tent, title: 'Carpas lejos de la zona de anidación', text: 'Arma tu carpa fuera de las zonas marcadas y retírala de noche si estás cerca.' },
-  { icon: Car, title: 'Ningún vehículo en la playa', text: 'Las llantas compactan la arena, aplastan nidos y dejan surcos donde los neonatos quedan atrapados.' },
-  { icon: Volume2, title: 'Ruido bajo de noche', text: 'Música y gritos espantan a las hembras que llegan a anidar.' },
-  { icon: Lightbulb, title: 'Apaga las luces que dan a la playa', text: 'Los neonatos buscan el reflejo del mar. Una luz de hotel o casa los lleva hacia la calle.' },
-  { icon: Trash2, title: 'Llévate tu basura', text: 'El plástico termina en el mar, donde las tortugas lo confunden con comida.' },
-];
+const ICON: Record<BeachRuleId, LucideIcon> = { perros: Dog, fogatas: Flame, carpas: Tent, vehiculos: Car, ruido: Volume2, luces: Lightbulb, basura: Trash2 };
+const rules = BEACH_RULES.map((r) => ({ ...r, icon: ICON[r.id] }));
 
 export default function Practicas() {
   return (
