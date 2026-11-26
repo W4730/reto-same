@@ -1,5 +1,7 @@
 # Reto Same · Registro de nidos
 
+**Web pública:** https://reto-same.vercel.app
+
 App de campo para voluntarios y coordinador, y web pública para turistas, de la **Fundación Reto Same** (Rescate de Tortugas, Same – Esmeraldas, Ecuador). Reemplaza el mapa de Google Earth.
 
 - Especificación: [handout.md](handout.md) · decisiones de la v1: [docs/superpowers/specs](docs/superpowers/specs/2026-11-25-reto-same-app-design.md)
@@ -47,7 +49,7 @@ npm run web             # http://localhost:5173
 npm run build -w apps/web
 ```
 
-**Vercel:** importar el repo, *Root Directory* = `apps/web`, framework Vite, y agregar `VITE_SUPABASE_URL` y `VITE_SUPABASE_KEY` en Environment Variables. `apps/web/vercel.json` ya redirige las rutas a la SPA.
+**Producción:** https://reto-same.vercel.app (proyecto Vercel `reto-same`, *Root Directory* = `apps/web`, variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_KEY` ya cargadas). Para publicar: `npx vercel deploy --prod` desde la raíz del repo, o conectar GitHub en Vercel → Settings → Git para que cada push a `main` publique solo.
 
 ## Base de datos (Supabase)
 
