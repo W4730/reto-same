@@ -4,6 +4,13 @@
     "strict": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "paths": { "@/*": ["./src/*"] }
-  }
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "**/*.test.ts"
+  ]
 }
