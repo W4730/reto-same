@@ -1,0 +1,78 @@
+# Reto Same · Registro de nidos
+
+App de campo para voluntarios y coordinador, y web pública para turistas, de la **Fundación Reto Same** (Rescate de Tortugas, Same – Esmeraldas, Ecuador). Reemplaza el mapa de Google Earth.
+
+- Especificación: [handout.md](handout.md) · decisiones de la v1: [docs/superpowers/specs](docs/superpowers/specs/2026-11-25-reto-same-app-design.md)
+
+## Estructura
+
+| Carpeta | Qué es |
+|---|---|
+| `apps/campo` | App Expo (SDK 58) para voluntarios y coordinador. Corre en **Expo Go**. Registro en 3 pasos, sin señal, validación |
+| `apps/web` | Web pública Vite + React (PWA). SOS sin señal, mapa de sectores, reporte de avistamientos, QR. Se publica en Vercel |
+| `packages/shared` | Estados del nido, ventana de eclosión (45–60 días), temporada, colores de marca |
+| `supabase/migrations` | Esquema, reglas de acceso (RLS), triggers y funciones públicas |
+| `scripts/import-kml.mjs` | Importa el KML de Google Earth |
+
+## Empezar
+
+```bash
+npm install
+npm test                      # dominio, cola offline e importador KML
+```
+
+### Variables de entorno
+
+Copiar los `.env.example` y completar con los datos del proyecto Supabase (Project Settings → API):
+
+```
+apps/campo/.env   EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_KEY
+apps/web/.env     VITE_SUPABASE_URL, VITE_SUPABASE_KEY
+```
+
+Solo la clave **publishable/anon**. La `service_role` nunca va en las apps.
+
+### App de campo (Expo Go)
+
+```bash
+cd apps/campo
+npx expo start          # escanear el QR con Expo Go, o tecla "a" para el emulador Android
+```
+
+### Web pública
+
+```bash
+npm run web             # http://localhost:5173
+npm run build -w apps/web
+```
+
+**Vercel:** importar el repo, *Root Directory* = `apps/web`, framework Vite, y agregar `VITE_SUPABASE_URL` y `VITE_SUPABASE_KEY` en Environment Variables. `apps/web/vercel.json` ya redirige las rutas a la SPA.
+
+## Base de datos (Supabase)
+
+Aplicar en orden `supabase/migrations/0001_init.sql` y `0002_sectors.sql` (SQL Editor del panel, o `supabase db push`).
+
+**Primer coordinador:** crear la cuenta desde la app y luego, en el SQL Editor:
+
+```sql
+update public.profiles set role = 'coordinador' where id = (select id from auth.users where email = 'correo@del.coordinador');
+```
+
+Después el coordinador asigna roles desde la app (ícono de equipo).
+
+**Importar Google Earth:** exportar el mapa como KML y correr
+
+```bash
+SUPABASE_URL=https://xxxx.supabase.co SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-kml.mjs nidos.kml
+```
+
+## Reglas que viven en la base (no en las apps)
+
+- Código corto por temporada (`S26-0142`), sector y ventana de eclosión: trigger al insertar.
+- Un nido validado no puede moverse: el trigger rechaza el cambio, incluso al coordinador.
+- El público nunca lee `nests`. Ve `public_sectors()` (conteos) y `public_nests()` (solo eclosionados o perdidos).
+- `por_eclosionar` se calcula al leer (`hatch_from <= ahora`), sin tareas programadas.
+
+## Pendiente de confirmar con Reto Same
+
+Ver handout §16: nombres reales de los sectores (los actuales son provisionales), estado "reubicado", modo nocturno, cifras oficiales.
