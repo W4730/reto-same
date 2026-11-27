@@ -55,6 +55,15 @@
         {
           "locationWhenInUsePermission": "Reto Same usa tu ubicación para marcar dónde está el nido."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableMinifyInReleaseBuilds": false,
+            "enableShrinkResourcesInReleaseBuilds": false
+          }
+        }
       ]
     ],
     "scheme": "retosame",
