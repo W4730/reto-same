@@ -105,6 +105,9 @@ export default function Home() {
               Síguenos en Instagram
             </a>
           </div>
+          <p className="dim">
+            ¿Ya eres voluntario? <Link to="/app">Descarga la app de campo para registrar nidos</Link>.
+          </p>
         </div>
       </section>
     </>

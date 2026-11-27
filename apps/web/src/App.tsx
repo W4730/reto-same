@@ -1,6 +1,7 @@
 import { Camera, Home as HomeIcon, Map, Siren } from 'lucide-react';
 import { lazy, Suspense, useEffect, type ComponentType } from 'react';
 import { Link, usePath } from './lib/nav';
+import AppCampo from './pages/App';
 import Home from './pages/Home';
 const Mapa = lazy(() => import('./pages/Mapa'));
 import Practicas from './pages/Practicas';
@@ -15,6 +16,7 @@ const pages: Record<string, { el: ComponentType; title: string }> = {
   '/reportar': { el: Reportar, title: 'Reportar avistamiento · Reto Same' },
   '/playa': { el: Practicas, title: 'Buenas prácticas en la playa · Reto Same' },
   '/qr': { el: Qr, title: 'Código QR · Reto Same' },
+  '/app': { el: AppCampo, title: 'App de campo · Reto Same' },
 };
 
 export default function App() {
@@ -55,7 +57,7 @@ export default function App() {
           </p>
           <p>
             <a href="https://instagram.com/reto.same">@reto.same</a> · <a href="tel:+593984281540">+593 98 428 1540</a> ·{' '}
-            <Link to="/qr">QR para hoteles</Link>
+            <Link to="/qr">QR para hoteles</Link> · <Link to="/app">App para voluntarios</Link>
           </p>
         </div>
       </footer>
